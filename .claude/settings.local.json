@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rake install)",
+      "Bash(ruby:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
