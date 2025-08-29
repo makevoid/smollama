@@ -48,8 +48,8 @@ puts response[:content]
 ```ruby
 response = client.chat(
   "Explain quantum computing",
-  temperature: 0.7,
-  top_p: 0.9,
+  temperature: 0.6, # NOTE: use 0.2 for coding tasks
+  top_p: 0.98,
   max_tokens: 500
 )
 puts response[:content]
