@@ -28,7 +28,7 @@ Configure the client at application startup:
 require 'smollama'
 
 Smollama::Client.configure do |config|
-  config.server_ip = '10.120.1.122'
+  config.server_ip = '127.0.0.1' # 192.168.0.x or similar if you're running Ollama in a box in your LAN
   config.server_port = 11434  # optional, defaults to 11434
   config.default_model = 'gpt-oss'
 end
