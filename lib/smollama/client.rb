@@ -1,5 +1,6 @@
 require 'excon'
 require 'json'
+require 'base64'
 
 module Smollama
   class Client
@@ -33,8 +34,8 @@ module Smollama
     end
 
     # Main chat method with configurable parameters
-    def chat(message, temperature: nil, top_p: nil, max_tokens: nil, stream: false)
-      messages = build_messages(message)
+    def chat(message, temperature: nil, top_p: nil, max_tokens: nil, stream: false, images: nil)
+      messages = build_messages(message, images: images)
 
       payload = {
         model: @model,
@@ -105,8 +106,8 @@ module Smollama
 
     private
 
-    def build_messages(input)
-      case input
+    def build_messages(input, images: nil)
+      messages = case input
       when String
         [{ role: 'user', content: input }]
       when Hash
@@ -115,6 +116,35 @@ module Smollama
         input
       else
         raise "Invalid message format"
+      end
+
+      # Add images to the last user message if provided
+      if images && !images.empty?
+        encoded_images = encode_images(images)
+        messages.last[:images] = encoded_images
+      end
+
+      messages
+    end
+
+    def encode_images(images)
+      Array(images).map do |image|
+        case image
+        when String
+          if image.start_with?('http://', 'https://')
+            # URL - Ollama can handle URLs directly, but we'll fetch and encode
+            require 'open-uri'
+            Base64.strict_encode64(URI.open(image).read)
+          elsif File.exist?(image)
+            # File path
+            Base64.strict_encode64(File.read(image))
+          else
+            # Assume it's already base64 encoded
+            image
+          end
+        else
+          raise "Invalid image format: #{image.class}"
+        end
       end
     end
 

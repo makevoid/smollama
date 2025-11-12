@@ -85,6 +85,47 @@ special_client = Smollama::Client.new(model: 'llama2')
 response = special_client.ask("Hello!")
 ```
 
+### Vision - Chat with Images
+
+Vision models can accept images alongside text to describe, classify, and answer questions about what they see.
+
+```ruby
+# Use a vision-capable model
+client = Smollama::Client.new(model: 'gemma3')
+
+# With a local file path
+response = client.chat(
+  "What is in this image?",
+  images: ["./cat.jpg"]
+)
+puts response[:content]
+
+# With a URL
+response = client.chat(
+  "Describe this image",
+  images: ["https://example.com/image.jpg"]
+)
+
+# With multiple images
+response = client.chat(
+  "Compare these images",
+  images: ["./image1.jpg", "./image2.jpg"]
+)
+
+# With base64 encoded image data
+img_data = Base64.strict_encode64(File.read("./image.jpg"))
+response = client.chat(
+  "What do you see?",
+  images: [img_data]
+)
+```
+
+The `images` parameter accepts:
+- File paths (e.g., `"./image.jpg"`)
+- URLs (e.g., `"https://example.com/image.jpg"`)
+- Base64 encoded strings
+- An array of any combination of the above
+
 ### Server Health Check
 
 ```ruby
