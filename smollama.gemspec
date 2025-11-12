@@ -25,6 +25,7 @@ Gem::Specification.new do |spec|
 
   # Runtime dependencies
   spec.add_dependency "excon", "~> 0.100"
+  spec.add_dependency "base64"
 
   # Development dependencies
   spec.add_development_dependency "bundler", "~> 2.0"
